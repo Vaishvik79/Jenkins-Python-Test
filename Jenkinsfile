@@ -51,10 +51,9 @@ pipeline {
     post {
     always {
         archiveArtifacts artifacts: 'structure.txt', fingerprint: true
-    }
-    success {
-        archiveArtifacts artifacts: 'dist/*.whl'
+        archiveArtifacts artifacts: 'dist/*.whl', allowEmptyArchive: true
     }
 }
+
 
 }
