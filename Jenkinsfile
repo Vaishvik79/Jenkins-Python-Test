@@ -49,9 +49,12 @@ pipeline {
     }
 
     post {
-        always {
-            archiveArtifacts artifacts: 'structure.txt', fingerprint: true
-            archiveArtifacts artifacts: 'dist/*.whl', fingerprint: true
-        }
+    always {
+        archiveArtifacts artifacts: 'structure.txt', fingerprint: true
     }
+    success {
+        archiveArtifacts artifacts: 'dist/*.whl'
+    }
+}
+
 }
