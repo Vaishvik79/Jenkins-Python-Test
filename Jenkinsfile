@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     options {
-        skipDefaultCheckout(true)   // 👈 IMPORTANT
+        skipDefaultCheckout(true)   // prevent auto checkout
     }
 
     parameters {
@@ -13,8 +13,8 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                cleanWs()          // 👈 clean old junk (venv, __pycache__, etc.)
-                checkout scm       // 👈 clone repo ONCE, clean
+                cleanWs()           // clean previous workspace safely
+                checkout scm        // single, clean repo checkout
             }
         }
 
@@ -40,7 +40,9 @@ pipeline {
                 pip install -r requirements.txt
                 pip install -e .
                 pytest
-                echo "Successfully tested!"
+                pip install build
+                python -m build
+                echo "Build artifact created successfully"
                 '''
             }
         }
@@ -49,6 +51,7 @@ pipeline {
     post {
         always {
             archiveArtifacts artifacts: 'structure.txt', fingerprint: true
+            archiveArtifacts artifacts: 'dist/*.whl', fingerprint: true
         }
     }
 }
